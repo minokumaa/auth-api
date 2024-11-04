@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Hapi = require('@hapi/hapi');
 const ClientError = require('../../Commons/exceptions/ClientError');
 const DomainErrorTranslator = require('../../Commons/exceptions/DomainErrorTranslator');
@@ -7,8 +8,8 @@ const config = require('../../Commons/config');
 
 const createServer = async (container) => {
   const server = Hapi.server({
-    port: config.app.port,
-    host: config.app.host,
+    port: process.env.PORT,
+    host: process.env.HOST,
     debug: config.app.debug,
   });
 
