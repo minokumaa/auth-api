@@ -1,28 +1,33 @@
-require('dotenv').config();
 const Hapi = require('@hapi/hapi');
 const ClientError = require('../../Commons/exceptions/ClientError');
 const DomainErrorTranslator = require('../../Commons/exceptions/DomainErrorTranslator');
 const users = require('../../Interfaces/http/api/users');
 const authentications = require('../../Interfaces/http/api/authentications');
-const config = require('../../Commons/config');
 
-const createServer = async (container) => {
+const createServer = async (injections) => {
   const server = Hapi.server({
-    port: process.env.PORT,
     host: process.env.HOST,
-    debug: config.app.debug,
+    port: process.env.PORT,
   });
 
   await server.register([
     {
       plugin: users,
-      options: { container },
+      options: { injections },
     },
     {
       plugin: authentications,
-      options: { container },
+      options: { injections },
     },
   ]);
+
+  server.route({
+    method: 'GET',
+    path: '/',
+    handler: () => ({
+      value: 'Hello world!',
+    }),
+  });
 
   server.ext('onPreResponse', (request, h) => {
     // mendapatkan konteks response dari request
@@ -62,5 +67,3 @@ const createServer = async (container) => {
 
   return server;
 };
-
-module.exports = createServer;
