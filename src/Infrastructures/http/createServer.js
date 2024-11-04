@@ -67,3 +67,5 @@ const createServer = async (injections) => {
 
   return server;
 };
+
+module.exports = createServer;
